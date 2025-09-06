@@ -1,0 +1,13 @@
+      name: GPU-accelerated Workflow
+
+    on: [push]
+
+    jobs:
+      build-and-test:
+        runs-on: windows-latest-16-core-t4-gpu # Example of a T4 GPU runner
+        steps:
+          - uses: actions/checkout@v4
+          - name: Install dependencies
+            run: pip install -r requirements.txt
+          - name: Run GPU-accelerated script
+            run: python train_model.py --gpu
