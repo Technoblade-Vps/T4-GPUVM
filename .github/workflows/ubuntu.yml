@@ -1,0 +1,31 @@
+name: Ubuntu-VPS
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update and upgrade
+        run: sudo apt-get update -y && sudo apt-get upgrade -y
+      - name: Get ip with pinggy
+        run: |
+          while true; do 
+    ssh -p 443 -o StrictHostKeyChecking=no -o ServerAliveInterval=30 -R0:localhost:8000 tcp@a.pinggy.io; 
+sleep 10; done
+          
+      - name: Run sshd
+        run: sudo service sshd start
+        
+      - name: Change pass
+        run: yes superpass | sudo passwd
+        
+      - name: add user
+        run: |
+          sudo useradd -m superuser
+          yes superpass | sudo passwd superuser
+          sudo usermod -aG sudo superuser
+
+      - name: run loop
+        run: tail -f /dev/null
+
